@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lona - Learn with the Voices You Know</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        @font-face {
+            font-family: 'Roboto';
+            src: url('https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: "Open Sans";
+            src: url("{% static 'fonts/OpenSans-Regular-webfont2.woff2' %}") format("woff2");
+            font-weight: 700;
+        }    
+        @font-face {
+            font-family: 'Nasalization';
+            src: url("{% static 'fonts/nasalization-rg.otf' %}") format("opentype");
+            font-weight: normal;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Roboto';
+            src: url('https://fonts.gstatic.com/s/roboto/v27/KFOlCnqEu92Fr1MmWUlfBBc4AMP6lQ.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #6c63ff;
+            --accent-color: #ff6b6b;
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --card-bg: rgba(255, 255, 255, 0.9);
+        }
+
+        body {
+            font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Nasalization';
+            font-weight: 700;
+        }
+
+        .navbar {
+            background-color: var(--primary-color);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: white;
+            font-family: 'Nasalization', sans-serif;
+        }
+
+        .nav-link {
+            color: white;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color);
+        }
+
+        .hero {
+            background: var(--primary-color);
+            color: white;
+            padding: 50px 0;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: none;
+            border-radius: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .pricing-card {
+            background: white;
+        }
+
+        .footer {
+            background-color: #333;
+            color: white;
+        }
+
+        .btn-white {
+            background-color: var(--bg-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        .btn-outline-white {
+            color: var(--bg-color);
+            border-color: var(--bg-color);
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .nav-tabs .nav-link {
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-tabs .nav-link:hover, .nav-tabs .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .tab-content {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">Lona</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="#how-it-works">How It Works</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#pricing">Pricing</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="d-flex">
+                <a href="#" class="btn btn-outline-light me-2">Login</a>
+                <a href="#" class="btn btn-light">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="display-4 fw-bold mb-4">Learn with the Voices You Know</h1>
+                <p class="lead mb-4">Lona brings your favorite teachers into your home through AI-powered personalized learning experiences.</p>
+                <a href="#" class="btn btn-light btn-lg mb-5">Get Started</a>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <ul class="nav nav-tabs justify-content-center" id="featureTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="personalize-tab" data-bs-toggle="tab" data-bs-target="#personalize" type="button" role="tab" aria-controls="personalize" aria-selected="true">Personalize</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="engage-tab" data-bs-toggle="tab" data-bs-target="#engage" type="button" role="tab" aria-controls="engage" aria-selected="false">Engage</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="learn-tab" data-bs-toggle="tab" data-bs-target="#learn" type="button" role="tab" aria-controls="learn" aria-selected="false">Learn</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="grow-tab" data-bs-toggle="tab" data-bs-target="#grow" type="button" role="tab" aria-controls="grow" aria-selected="false">Grow</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content mt-3" id="featureTabsContent">
+                        <div class="tab-pane fade show active" id="personalize" role="tabpanel" aria-labelledby="personalize-tab">
+                            <h3>Personalized Learning</h3>
+                            <p>Experience lessons tailored to your pace and style, delivered by AI-powered versions of your favorite teachers.</p>
+                        </div>
+                        <div class="tab-pane fade" id="engage" role="tabpanel" aria-labelledby="engage-tab">
+                            <h3>Interactive Engagement</h3>
+                            <p>Interact with AI teachers through voice and text, asking questions and receiving instant feedback.</p>
+                        </div>
+                        <div class="tab-pane fade" id="learn" role="tabpanel" aria-labelledby="learn-tab">
+                            <h3>Visual Learning</h3>
+                            <p>Enhance understanding with AI-generated visuals and diagrams that accompany each lesson.</p>
+                        </div>
+                        <div class="tab-pane fade" id="grow" role="tabpanel" aria-labelledby="grow-tab">
+                            <h3>Track Progress</h3>
+                            <p>Monitor your learning journey with detailed progress tracking and performance analytics.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">How Lona Works</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card mb-4 h-100 floating">
+                        <div class="card-body text-center">
+                            <div class="feature-icon">
+                                <i class="fas fa-microphone"></i>
+                            </div>
+                            <h4>Voice Upload</h4>
+                            <p>Teachers upload their voices to create personalized AI tutors.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card mb-4 h-100 floating" style="animation-delay: 1s;">
+                        <div class="card-body text-center">
+                            <div class="feature-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h4>AI Content Generation</h4>
+                            <p>GPT-4 creates tailored lesson content based on the curriculum.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card mb-4 h-100 floating" style="animation-delay: 2s;">
+                        <div class="card-body text-center">
+                            <div class="feature-icon">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <h4>Personalized Learning</h4>
+                            <p>Students learn from AI versions of their teachers at their own pace.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card mb-4 h-100 floating" style="animation-delay: 3s;">
+                        <div class="card-body text-center">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h4>Progress Tracking</h4>
+                            <p>Monitor learning progress and adjust content accordingly.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-5" style="background-color: #f8f9fa;">
+        <div class="container">
+            <h2 class="text-center mb-5">Key Features</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-clone me-2"></i>Voice Cloning</h5>
+                            <p class="card-text">Create AI versions of teachers using advanced voice cloning technology.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-book-open me-2"></i>Curriculum Integration</h5>
+                            <p class="card-text">Easily upload and integrate existing curricula into the Lona platform.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-chalkboard-teacher me-2"></i>Admin Interface</h5>
+                            <p class="card-text">Intuitive dashboard for teachers to manage content and student progress.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-laptop me-2"></i>Student Dashboard</h5>
+                            <p class="card-text">User-friendly interface for students to access lessons and track progress.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">                    
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-globe me-2"></i>Multi-language Support</h5>
+                                    <p class="card-text">Learn in multiple languages with AI-powered translation and localization.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-chart-bar me-2"></i>Analytics</h5>
+                                    <p class="card-text">Detailed insights into student performance and learning patterns.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        
+            <!-- Pricing -->
+            <section id="pricing" class="py-5">
+                <div class="container">
+                    <h2 class="text-center mb-5">Choose Your Plan</h2>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card pricing-card mb-4">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">Basic</h5>
+                                    <h6 class="card-price text-center">$9.99<span class="period">/month</span></h6>
+                                    <hr>
+                                    <ul class="fa-ul">
+                                        <li><span class="fa-li"><i class="fas fa-check"></i></span>Access to 1 AI teacher</li>
+                                        <li><span class="fa-li"><i class="fas fa-check"></i></span>5 subjects</li>
+                                        <li><span class="fa-li"><i class="fas fa-check"></i></span>Basic progress tracking</li>
+                                        <li class="text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Advanced analytics</li>
+                                    </ul>
+                                    <div class="d-grid">
+                                        <a href="#" class="btn btn-primary text-uppercase">Choose Plan</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card pricing-card mb-4 floating">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">Pro</h5>
+                                    <h6 class="card-price text-center">$24.99<span class="period">/month</span></h6>
+                                    <hr>
+                                    <ul class="fa-ul">
+                                        <li><span class="fa-li"><i class="fas fa-check"></i></span>Access to 3 AI teachers</li>
+                                        <li><span class="fa-li"><i class="fas fa-check"></i></span>All subjects</li>
+                                        <li><span class="fa-li"><i class="fas fa-check"></i></span>Advanced progress tracking</li>
+                                        <li><span class="fa-li"><i class="fas fa-check"></i></span>Basic analytics</li>
+                                    </ul>
+                                    <div class="d-grid">
+                                        <a href="#" class="btn btn-primary text-uppercase">Choose Plan</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card pricing-card mb-4">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">Enterprise</h5>
+                                    <h6 class="card-price text-center">Custom</h6>
+                                    <hr>
+                                    <ul class="fa-ul">
+                                        <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited AI teachers</li>
+                                        <li><span class="fa-li"><i class="fas fa-check"></i></span>All subjects + custom content</li>
+                                        <li><span class="fa-li"><i class="fas fa-check"></i></span>Advanced progress tracking</li>
+                                        <li><span class="fa-li"><i class="fas fa-check"></i></span>Advanced analytics & reporting</li>
+                                    </ul>
+                                    <div class="d-grid">
+                                        <a href="#" class="btn btn-primary text-uppercase">Contact Us</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        
+            <!-- Testimonials Section -->
+            <section id="testimonials" class="py-5" style="background-color: #f8f9fa;">
+                <div class="container">
+                    <h2 class="text-center mb-5">What Our Users Say</h2>
+                    <div class="row">
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 floating">
+                                <div class="card-body">
+                                    <p class="card-text">"Lona has transformed the way I learn. It's like having my favorite teacher available 24/7!"</p>
+                                    <div class="d-flex justify-content-end align-items-center">
+                                        <div class="text-end">
+                                            <h6 class="mb-0">Sarah K.</h6>
+                                            <small class="text-muted">High School Student</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <p class="card-text">"As a teacher, Lona has allowed me to reach more students and provide personalized attention like never before."</p>
+                                    <div class="d-flex justify-content-end align-items-center">
+                                        <div class="text-end">
+                                            <h6 class="mb-0">John D.</h6>
+                                            <small class="text-muted">Math Teacher</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <p class="card-text">"Lona has made homeschooling so much easier. My kids love learning from their AI teachers!"</p>
+                                    <div class="d-flex justify-content-end align-items-center">
+                                        <div class="text-end">
+                                            <h6 class="mb-0">Emma R.</h6>
+                                            <small class="text-muted">Parent</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        
+            <!-- Call to Action -->
+            <section id="cta" class="py-5" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));">
+                <div class="container text-center">
+                    <h2 class="mb-4 text-white">Ready to Transform Your Learning Experience?</h2>
+                    <p class="lead mb-4 text-white">Join thousands of students learning with Lona's AI-powered personalized education.</p>
+                    <a href="#" class="btn btn-light btn-lg">Start Your Free Trial</a>
+                </div>
+            </section>
+        
+            <!-- FAQ Section -->
+            <section id="faq" class="py-5">
+                <div class="container">
+                    <h2 class="text-center mb-5">Frequently Asked Questions</h2>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="accordion" id="accordionFAQ">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            How does Lona's AI teacher simulation work?
+                                        </button>
+                                    </h2>
+                                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionFAQ">
+                                        <div class="accordion-body">
+                                            Lona uses advanced AI and voice cloning technology to create a virtual version of a teacher. This AI teacher can deliver lessons, answer questions, and provide feedback using the original teacher's voice and teaching style.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingTwo">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                            Can I use Lona for any subject?
+                                        </button>
+                                    </h2>
+                                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionFAQ">
+                                        <div class="accordion-body">
+                                            Yes, Lona supports a wide range of subjects. Teachers can upload their curriculum for any subject, and our AI will generate appropriate content and lessons.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="accordion" id="accordionFAQ2">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingThree">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                            Is my data safe with Lona?
+                                        </button>
+                                    </h2>
+                                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionFAQ2">
+                                        <div class="accordion-body">
+                                            Absolutely. We take data privacy very seriously. All personal information and learning data are encrypted and stored securely. We comply with all relevant data protection regulations.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingFour">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                            Can Lona replace real teachers?
+                                        </button>
+                                    </h2>
+                                    <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionFAQ2">
+                                        <div class="accordion-body">
+                                            Lona is designed to complement and enhance the work of real teachers, not replace them. It provides additional support and personalized learning experiences, allowing teachers to focus on more complex aspects of education.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        
+            <!-- Footer -->
+            <footer class="footer py-5">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3 mb-3">
+                            <h5>Lona</h5>
+                            <p class="small">Revolutionizing education with AI-powered personalized learning experiences.</p>
+                        </div>
+                        <div class="col-lg-3 mb-3">
+                            <h5>Quick Links</h5>
+                            <ul class="list-unstyled">
+                                <li><a href="#home">Home</a></li>
+                                <li><a href="#how-it-works">How It Works</a></li>
+                                <li><a href="#features">Features</a></li>
+                                <li><a href="#pricing">Pricing</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 mb-3">
+                            <h5>Legal</h5>
+                            <ul class="list-unstyled">
+                                <li><a href="#">Terms of Service</a></li>
+                                <li><a href="#">Privacy Policy</a></li>
+                                <li><a href="#">Cookie Policy</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 mb-3">
+                            <h5>Connect With Us</h5>
+                            <ul class="list-inline">
+                                <li class="list-inline-item"><a href="#" class="text-white"><i class="fab fa-facebook-f"></i></a></li>
+                                <li class="list-inline-item"><a href="#" class="text-white"><i class="fab fa-twitter"></i></a></li>
+                                <li class="list-inline-item"><a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a></li>
+                                <li class="list-inline-item"><a href="#" class="text-white"><i class="fab fa-instagram"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <hr class="my-4">
+                    <div class="row">
+                        <div class="col-md-6 text-center text-md-start">
+                            <p>&copy; 2024 Lona. All rights reserved.</p>
+                        </div>
+                        <div class="col-md-6 text-center text-md-end">
+                            <ul class="list-inline">
+                                <li class="list-inline-item"><a href="#" class="text-white">FAQ</a></li>
+                                <li class="list-inline-item"><a href="#" class="text-white">Support</a></li>
+                                <li class="list-inline-item"><a href="#" class="text-white">Blog</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+        </body>
+        </html>
