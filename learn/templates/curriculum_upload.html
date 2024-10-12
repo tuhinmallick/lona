@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload Curriculum{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Upload Curriculum</h1>
+<form action="{% url 'curriculum_upload' %}" method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="subject_name" class="form-label">Subject Name:</label>
+        <input type="text" class="form-control" id="subject_name" name="subject_name" required>
+    </div>
+    <div class="mb-3">
+        <label for="topic_name" class="form-label">Topic Name:</label>
+        <input type="text" class="form-control" id="topic_name" name="topic_name" required>
+    </div>
+    <div class="mb-3">
+        <label for="content" class="form-label">Content:</label>
+        <textarea class="form-control" id="content" name="content" rows="10" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Upload</button>
+</form>
+{% endblock %}

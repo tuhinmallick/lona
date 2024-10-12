@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Learning Session{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Learning Session</h1>
+{% if subjects %}
+<form action="{% url 'learning_session' %}" method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="subject" class="form-label">Select Subject:</label>
+        <select class="form-select" id="subject" name="subject_id" required>
+            <option value="">Choose a subject...</option>
+            {% for subject in subjects %}
+            <option value="{{ subject.id }}">{{ subject.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="topic" class="form-label">Select Topic:</label>
+        <select class="form-select" id="topic" name="topic_id" required>
+            <option value="">Choose a topic...</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Start Learning</button>
+</form>
+{% else %}
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">{{ topic.name }}</h5>
+        <p class="card-text">{{ content }}</p>
+        <audio controls>
+            <source src="{{ audio_url }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const subjectSelect = document.getElementById('subject');
+    const topicSelect = document.getElementById('topic');
+
+    subjectSelect.addEventListener('change', function() {
+        const subjectId = this.value;
+        fetch(`/api/topics/?subject_id=${subjectId}`)
+            .then(response => response.json())
+            .then(data => {
+                topicSelect.innerHTML = '<option value="">Choose a topic...</option>';
+                data.forEach(topic => {
+                    const option = document.createElement('option');
+                    option.value = topic.id;
+                    option.textContent = topic.name;
+                    topicSelect.appendChild(option);
+                });
+            });
+    });
+</script>
+{% endblock %}

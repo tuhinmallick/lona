@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Teacher Dashboard{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Welcome, {{ user.get_full_name }}!</h1>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Upload Curriculum</h5>
+                <p class="card-text">Add new subjects and topics for students to learn.</p>
+                <a href="{% url 'curriculum_upload' %}" class="btn btn-primary">Upload Curriculum</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Voice Recording</h5>
+                <p class="card-text">Record your voice for use in AI-generated lessons.</p>
+                <a href="{% url 'voice_recording' %}" class="btn btn-secondary">Record Voice</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

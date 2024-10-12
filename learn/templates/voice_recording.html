@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Voice Recording{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Voice Recording</h1>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Record Your Voice</h5>
+        <p class="card-text">Click the button below to start recording your voice. Speak clearly and naturally for the best results.</p>
+        <button id="startRecording" class="btn btn-primary">Start Recording</button>
+        <button id="stopRecording" class="btn btn-danger" style="display: none;">Stop Recording</button>
+        <audio id="audioPlayback" controls style="display: none;"></audio>
+        <form id="uploadForm" action="{% url 'voice_recording' %}" method="post" enctype="multipart/form-data" style="display: none;">
+            {% csrf_token %}
+            <input type="file" id="audioFile" name="audio_file" accept="audio/*" style="display: none;">
+            <button type="submit" class="btn btn-success mt-3">Upload Recording</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let mediaRecorder;
+    let audioChunks = [];
+
+    const startRecording = document.getElementById('startRecording');
+    const stopRecording = document.getElementById('stopRecording');
+    const audioPlayback = document.getElementById('audioPlayback');
+    const uploadForm = document.getElementById('uploadForm');
+    const audioFile = document.getElementById('audioFile');
+
+    startRecording.addEventListener('click', async () => {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.addEventListener('dataavailable', event => {
+            audioChunks.push(event.data);
+        });
+
+        mediaRecorder.addEventListener('stop', () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+            const audioUrl = URL.createObjectURL(audioBlob);
+            audioPlayback.src = audioUrl;
+            audioPlayback.style.display = 'block';
+            uploadForm.style.display = 'block';
+
+            const file = new File([audioBlob], 'voice_recording.wav', { type: 'audio/wav' });
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            audioFile.files = dataTransfer.files;
+        });
+
+        mediaRecorder.start();
+        startRecording.style.display = 'none';
+        stopRecording.style.display = 'inline-block';
+    });
+
+    stopRecording.addEventListener('click', () => {
+        mediaRecorder.stop();
+        stopRecording.style.display = 'none';
+    });
+</script>
+{% endblock %}

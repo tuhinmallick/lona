@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TrendScribe{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+    <nav class="bg-blue-600 p-4 text-white">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Left: Brand -->
+            <a href="{% url 'home' %}" class="text-2xl font-bold">TrendScribe</a>
+
+            <!-- Center: Preferences and Dashboard -->
+            <div class="flex space-x-4">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'set_preferences' %}" class="mr-4">Preference Settings</a>
+                    <a href="{% url 'dashboard' %}" class="mr-4">Dashboard</a>
+                {% endif %}
+            </div>
+
+            <!-- Right: Logout/Login/Signup -->
+            <div>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'account_logout' %}">Logout</a>
+                {% else %}
+                    <a href="{% url 'account_login' %}" class="mr-4">Login</a>
+                    <a href="{% url 'account_signup' %}">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow container mx-auto mt-8 p-4">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="bg-gray-200 p-4">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2024 TrendScribe. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
