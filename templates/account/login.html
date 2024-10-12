@@ -19,7 +19,7 @@
             --light-blue: #1A85FF;
         }
         body {
-            background: linear-gradient(135deg, var(--dark-orange) 0%, var(--orange) 100%);
+            background: linear-gradient(135deg, var(--dark-blue) 0%, var(--cream) 100%);
             min-height: 100vh;
         }
         .login-form {
@@ -80,11 +80,10 @@
     <div class="container">
         <div class="login-form">
             <h2 class="text-center">Welcome Back!</h2>
-            <
+            
             <form method="post">
                 {% csrf_token %}
                 {{ form|crispy }}
-                <p>Or log in with Email:</p>
 
                 <div class="mb-3 form-check">
                     <input type="checkbox" class="form-check-input" id="rememberMe" name="remember">
