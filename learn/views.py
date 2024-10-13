@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Teacher, Subject, Topic, LearningSession
+from django.http import JsonResponse
+from .models import Teacher, Subject, Topic, LearningSession, TeacherVoice
 import requests
 import json
 import os
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -23,8 +25,16 @@ def select_teacher(request):
     teachers = Teacher.objects.all()
     return render(request, 'select_teacher.html', {'teachers': teachers})
 
+def get_topics(request):
+    subject_id = request.GET.get('subject_id')
+    topics = Topic.objects.filter(subject_id=subject_id).values('id', 'name')
+    return JsonResponse(list(topics), safe=False)
+
 @login_required
 def learning_session(request):
+    teacher, created = Teacher.objects.get_or_create(user=request.user)
+    # topic, created = Topic.objects.get_or_create(name='Introduction to Python', content='Python is a high-level programming language that is widely used for web development, data analysis, artificial intelligence, and scientific computing.')
+
     if request.method == 'POST':
         teacher_id = request.POST.get('teacher_id')
         subject_id = request.POST.get('subject_id')
@@ -32,12 +42,21 @@ def learning_session(request):
 
         teacher = Teacher.objects.get(id=teacher_id)
         topic = Topic.objects.get(id=topic_id)
+        subject = Subject.objects.get(id=subject_id)
+
+        # Get the appropriate voice
+        teacher_voice = TeacherVoice.objects.filter(teacher=teacher, subject=subject).first()
+        if not teacher_voice:
+            teacher_voice = TeacherVoice.objects.filter(teacher=teacher, subject=None).first()
+
+        if not teacher_voice:
+            return render(request, 'error.html', {'message': 'No voice recording available for this teacher and subject.'})
 
         # Generate content using GPT-4
         gpt4_response = generate_gpt4_content(topic.content)
 
         # Convert text to speech using ElevenLabs API
-        audio_url = text_to_speech(gpt4_response, teacher.voice_id)
+        audio_url = text_to_speech(gpt4_response, teacher_voice.voice_id)
 
         # Create learning session
         LearningSession.objects.create(student=request.user, teacher=teacher, topic=topic)
@@ -48,7 +67,9 @@ def learning_session(request):
         })
     else:
         subjects = Subject.objects.all()
-        return render(request, 'learning_session.html', {'subjects': subjects})
+        initial_subject = subjects.first()
+        topics = Topic.objects.filter(subject=initial_subject) if initial_subject else []
+        return render(request, 'learning_session.html', {'subjects': subjects, 'topics': topics})
 
 @login_required
 @user_passes_test(is_teacher)
@@ -72,17 +93,35 @@ def curriculum_upload(request):
 @login_required
 @user_passes_test(is_teacher)
 def voice_recording(request):
+    # Get or create the Teacher object for the current user
+    teacher, created = Teacher.objects.get_or_create(user=request.user)
+
     if request.method == 'POST':
         audio_file = request.FILES.get('audio_file')
-        # Upload audio file to ElevenLabs and get voice_id
-        voice_id = upload_voice_to_elevenlabs(audio_file)
-        
-        teacher = Teacher.objects.get(user=request.user)
-        teacher.voice_id = voice_id
-        teacher.save()
+        subject_id = request.POST.get('subject_id')
+        description = request.POST.get('description')
 
-        return redirect('teacher_dashboard')
-    return render(request, 'voice_recording.html')
+        if not audio_file:
+            return render(request, 'voice_recording.html', {'error': 'No audio file provided.'})
+
+        subject = Subject.objects.get(id=subject_id) if subject_id else None
+
+        # Upload voice to ElevenLabs and get voice_id
+        voice_id = upload_voice_to_elevenlabs(audio_file, description)
+
+        if voice_id:
+            TeacherVoice.objects.create(
+                teacher=teacher,
+                subject=subject,
+                voice_id=voice_id,
+                description=description
+            )
+            return redirect('teacher_dashboard')
+        else:
+            return render(request, 'voice_recording.html', {'error': 'Failed to upload voice to ElevenLabs.'})
+
+    subjects = Subject.objects.all()
+    return render(request, 'voice_recording.html', {'subjects': subjects})
 
 def generate_gpt4_content(prompt):
     url = "https://api.openai.com/v1/chat/completions"
@@ -118,16 +157,25 @@ def text_to_speech(text, voice_id):
     # This is a simplified version, you'll need to implement file saving and URL generation
     return "path/to/audio/file.mp3"
 
-def upload_voice_to_elevenlabs(audio_file):
+def upload_voice_to_elevenlabs(audio_file, description):
     url = "https://api.elevenlabs.io/v1/voices/add"
     headers = {
         "Accept": "application/json",
         "xi-api-key": ELEVENLABS_API_KEY
     }
+
     files = {
-        'files': audio_file,
-        'name': 'Teacher Voice',
-        'description': 'Custom teacher voice for AI Teacher app'
+        'files': (audio_file.name, audio_file, audio_file.content_type),
+        'name': (None, f"{description[:20]}"),  # Use the first 20 characters of the description as the name
+        'description': (None, description)
     }
-    response = requests.post(url, headers=headers, files=files)
-    return response.json()['voice_id']
+
+    try:
+        response = requests.post(url, headers=headers, files=files)
+        response.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xx
+        return response.json().get('voice_id')
+    except requests.exceptions.RequestException as e:
+        print(f"Error uploading voice to ElevenLabs: {e}")
+        return None
+
+

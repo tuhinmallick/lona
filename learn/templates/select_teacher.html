@@ -9,7 +9,7 @@
     <div class="col-md-4 mb-3">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">{{ teacher.user.get_full_name }}</h5>
+                <h5 class="card-title">{{ teacher.user.username }}</h5>
                 <form action="{% url 'learning_session' %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="teacher_id" value="{{ teacher.id }}">

@@ -14,6 +14,19 @@
         <form id="uploadForm" action="{% url 'voice_recording' %}" method="post" enctype="multipart/form-data" style="display: none;">
             {% csrf_token %}
             <input type="file" id="audioFile" name="audio_file" accept="audio/*" style="display: none;">
+            <div class="mb-3">
+                <label for="subject" class="form-label">Subject (optional):</label>
+                <select class="form-select" id="subject" name="subject_id">
+                    <option value="">General purpose</option>
+                    {% for subject in subjects %}
+                    <option value="{{ subject.id }}">{{ subject.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description:</label>
+                <input type="text" class="form-control" id="description" name="description" required>
+            </div>
             <button type="submit" class="btn btn-success mt-3">Upload Recording</button>
         </form>
     </div>

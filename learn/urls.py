@@ -8,4 +8,5 @@ urlpatterns = [
     path('teacher/dashboard/', views.teacher_dashboard, name='teacher_dashboard'),
     path('teacher/curriculum-upload/', views.curriculum_upload, name='curriculum_upload'),
     path('teacher/voice-recording/', views.voice_recording, name='voice_recording'),
+    path('api/topics/', views.get_topics, name='get_topics'),
 ]

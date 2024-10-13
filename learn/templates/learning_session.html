@@ -4,7 +4,6 @@
 
 {% block content %}
 <h1 class="mb-4">Learning Session</h1>
-{% if subjects %}
 <form action="{% url 'learning_session' %}" method="post">
     {% csrf_token %}
     <div class="mb-3">
@@ -20,22 +19,13 @@
         <label for="topic" class="form-label">Select Topic:</label>
         <select class="form-select" id="topic" name="topic_id" required>
             <option value="">Choose a topic...</option>
+            {% for topic in topics %}
+            <option value="{{ topic.id }}">{{ topic.name }}</option>
+            {% endfor %}
         </select>
     </div>
     <button type="submit" class="btn btn-primary">Start Learning</button>
 </form>
-{% else %}
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">{{ topic.name }}</h5>
-        <p class="card-text">{{ content }}</p>
-        <audio controls>
-            <source src="{{ audio_url }}" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-</div>
-{% endif %}
 {% endblock %}
 
 {% block extra_js %}
